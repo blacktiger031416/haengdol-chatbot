@@ -4,26 +4,57 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>행돌 AI Chatbot</title>
+  <!-- Valorant 느낌의 강한 산세리프 폰트 대체 -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <header class="site-header">
-    <h1>행돌 AI Chatbot</h1>
-    <p class="tagline">“발로란트 행돌” 톤으로 대화하는 간단 챗봇 데모</p>
+  <!-- 배경 패턴 -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- 상단 헤더(슬래시 컷 + 로고풍 SVG) -->
+  <header class="v-header">
+    <div class="brand">
+      <svg class="v-logo" viewBox="0 0 72 72" aria-hidden="true">
+        <path d="M10 50 L28 22 L36 34 L54 10 L62 22 L40 62 L28 46 L20 62 Z" />
+      </svg>
+      <div class="title">
+        <h1>행돌</h1>
+        <span>VALORANT AI CHATBOT</span>
+      </div>
+    </div>
+    <nav class="actions">
+      <a class="btn-ghost" href="#" onclick="window.location.reload()">새 대화</a>
+      <a class="btn-solid" href="https://www.netlify.com" target="_blank" rel="noreferrer">배포: Netlify</a>
+    </nav>
+    <div class="slash" aria-hidden="true"></div>
   </header>
 
-  <main class="chat-wrap" aria-label="채팅 영역">
-    <ul id="messages" class="messages" aria-live="polite" aria-relevant="additions"></ul>
+  <!-- 메인 패널 -->
+  <main class="panel">
+    <section class="panel-head">
+      <div class="tag">/ AGENT: HAENGDOL</div>
+      <p class="sub">랭크·메타·크로스헤어·맵콜… 뭐든 물어봐. — <strong>행돌 모드</strong></p>
+    </section>
 
-    <form id="chat-form" class="chat-form" autocomplete="off">
-      <label for="user-input" class="sr-only">메시지 입력</label>
-      <input id="user-input" name="message" type="text" placeholder="메시지를 입력하세요…" required />
-      <button type="submit" id="send-btn" aria-label="보내기">보내기</button>
-    </form>
+    <section class="chat-zone" aria-label="채팅 영역">
+      <ul id="messages" class="messages" aria-live="polite" aria-relevant="additions"></ul>
+
+      <form id="chat-form" class="chat-form" autocomplete="off">
+        <label for="user-input" class="sr-only">메시지 입력</label>
+        <input id="user-input" name="message" type="text" placeholder="예) 아이언에서 실버 가려면 뭐부터 고쳐?" required />
+        <button type="submit" id="send-btn" aria-label="보내기" class="btn-send">
+          <span>보내기</span>
+          <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><path d="M2 21L23 12L2 3L2 10L17 12L2 14L2 21Z"/></svg>
+        </button>
+      </form>
+    </section>
   </main>
 
-  <footer class="site-footer">
-    <small>© 2025 행돌 AI — GitHub & Netlify 데모</small>
+  <!-- 푸터 -->
+  <footer class="v-footer">
+    <div>© 2025 Haengdol AI • 팬메이드 데모</div>
+    <div class="credits">Powered by OpenAI • Built on GitHub → Netlify</div>
   </footer>
 
   <script src="./app.js"></script>
