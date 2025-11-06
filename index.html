@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>행돌 AI Chatbot</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>행돌 AI Chatbot</h1>
+    <p class="tagline">“발로란트 행돌” 톤으로 대화하는 간단 챗봇 데모</p>
+  </header>
+
+  <main class="chat-wrap" aria-label="채팅 영역">
+    <ul id="messages" class="messages" aria-live="polite" aria-relevant="additions"></ul>
+
+    <form id="chat-form" class="chat-form" autocomplete="off">
+      <label for="user-input" class="sr-only">메시지 입력</label>
+      <input id="user-input" name="message" type="text" placeholder="메시지를 입력하세요…" required />
+      <button type="submit" id="send-btn" aria-label="보내기">보내기</button>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <small>© 2025 행돌 AI — GitHub & Netlify 데모</small>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
