@@ -81,17 +81,20 @@ body{
 
 /* ===== 채팅 ===== */
 .chat-zone{display:grid; grid-template-rows:1fr auto}
+
+/* 핵심 변경: 높이를 확보하고 기본 정렬을 '아래'로 */
 .messages{
   list-style:none; margin:0; padding:16px;
   display:flex; flex-direction:column; gap:12px;
-  max-height:64vh; overflow:auto;
+  height:62vh;                 /* 고정 높이로 영역 확보 */
+  justify-content:flex-end;    /* 내용 적을 때 아래 정렬 */
+  overflow:auto;               /* 내용 많아지면 스크롤 */
   background:
     linear-gradient(180deg, rgba(0,229,255,.05), transparent 30%),
     linear-gradient(0deg, rgba(255,255,255,.02), transparent 24%),
     linear-gradient(180deg, #0f1822, #101b27 60%, #0e1720);
 }
 
-/* 공통 말풍선 베이스 */
 .msg{
   display:flex; align-items:flex-start; gap:12px;
   max-width:86%; position:relative;
@@ -150,7 +153,6 @@ body{
   content:""; position:absolute; left:-8px; top:14px;
   border-width:8px; border-style:solid;
   border-color:transparent #2a364a transparent transparent;
-  filter:drop-shadow(0 0 0 rgba(0,0,0,0.3));
 }
 .bio-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
 .bio-head img{width:32px; height:32px; border-radius:50%; border:2px solid #ff4655}
@@ -206,136 +208,8 @@ body{
 .messages::-webkit-scrollbar-track{background:#0b121a}
 .messages::-webkit-scrollbar-thumb{background:#1f2a3a; border-radius:10px}
 .messages::-webkit-scrollbar-thumb:hover{background:#2a3850}
-  padding:16px 22px;
-  display:flex; align-items:center; justify-content:space-between;
-  border-bottom:1px solid var(--val-line);
-  background:linear-gradient(180deg, #0f1923, #0e1720);
-}
-.v-header .brand{display:flex; align-items:center; gap:12px}
-.v-logo{
-  width:36px; height:36px; fill:var(--val-red);
-  filter: drop-shadow(0 4px 10px rgba(255,70,85,.25));
-}
-.title h1{font-size:22px; margin:0}
-.title span{display:block; color:var(--val-muted); font-size:12px; margin-top:2px; letter-spacing:.14em}
-.actions{display:flex; gap:10px}
-.btn-ghost,.btn-solid{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:600;
-  border:1px solid var(--val-line);
-}
-.btn-solid{
-  background:linear-gradient(180deg, #ff5967, #ff4655);
-  color:#fff; border-color:#c8333f; box-shadow:0 6px 18px rgba(255,70,85,.25);
-}
 
-/* ===== 메인 패널 ===== */
-.panel{
-  position:relative; z-index:1;
-  width:min(980px, 94vw);
-  margin:18px auto 28px;
-  background:linear-gradient(180deg, #101b27, #0f1822);
-  border:1px solid var(--val-line);
-  border-radius:16px;
-  box-shadow:0 20px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
-  overflow:hidden;
+/* 반응형: 모바일에서 채팅 높이 조금 더 확보 */
+@media (max-width: 640px){
+  .messages{height:66vh}
 }
-.panel-head{
-  padding:18px 18px 8px; border-bottom:1px solid var(--val-line);
-  background:linear-gradient(180deg, rgba(255,70,85,.06), transparent);
-}
-.tag{
-  display:inline-block; font-size:12px; color:#ffd7db;
-  background:rgba(255,70,85,.12); padding:6px 10px; border:1px solid rgba(255,70,85,.35);
-  border-radius:8px 8px 2px 8px; letter-spacing:.12em;
-}
-.sub{margin:8px 2px 10px; color:var(--val-muted); font-size:14px}
-
-/* ===== 채팅 ===== */
-.chat-zone{display:grid; grid-template-rows:1fr auto}
-.messages{
-  list-style:none; margin:0; padding:16px;
-  display:flex; flex-direction:column; gap:12px;
-  max-height:64vh; overflow:auto;
-  background:
-    linear-gradient(180deg, rgba(0,229,255,.05), transparent 30%),
-    linear-gradient(0deg, rgba(255,255,255,.02), transparent 24%),
-    linear-gradient(180deg, #0f1822, #101b27 60%, #0e1720);
-}
-
-/* 공통 말풍선 베이스 */
-.msg{
-  display:flex; align-items:flex-start; gap:12px;
-  max-width:86%; position:relative;
-}
-.msg .bubble{
-  padding:12px 14px; border-radius:12px; line-height:1.45;
-  white-space:pre-wrap; word-break:break-word; border:1px solid #263246;
-  background:linear-gradient(180deg, #161f2c, #121a25);
-  box-shadow:0 8px 18px rgba(0,0,0,.25);
-}
-
-/* 사용자 */
-.msg.user{align-self:flex-end; justify-content:flex-end}
-.msg.user .bubble{
-  background:linear-gradient(180deg, #142235, #101b27);
-  border-color:#2f3c52; box-shadow:0 8px 18px rgba(0,229,255,.12);
-}
-
-/* 봇(행돌): 아바타 + 이름(버블 밖) */
-.msg.bot{align-self:flex-start}
-.msg.bot .avatar{
-  flex:0 0 42px; display:flex; flex-direction:column; align-items:center; gap:6px;
-}
-.msg.bot .avatar img{
-  width:42px; height:42px; border-radius:50%;
-  border:2px solid var(--val-red);
-  box-shadow:0 0 10px rgba(255,70,85,.35);
-  object-fit:cover;
-}
-.msg.bot .content{display:flex; flex-direction:column; gap:6px; min-width:0}
-.msg.bot .name{
-  font-size:12px; font-weight:700; letter-spacing:.08em;
-  color:#ff99a2; margin-left:2px;
-}
-.msg.bot .bubble{
-  background:linear-gradient(180deg, #161f2c, #121a25);
-  border-color:#2a364a; box-shadow:0 8px 18px rgba(255,70,85,.12);
-}
-
-/* 생각 중 표시 */
-.msg.thinking .bubble{border-style:dashed; opacity:.9}
-
-/* 입력 폼 */
-.chat-form{
-  display:grid; grid-template-columns:1fr auto; gap:12px;
-  padding:12px; border-top:1px solid var(--val-line); background:var(--val-panel-2);
-}
-.chat-form input{
-  background:#0c141d; color:var(--val-text);
-  border:1px solid #1f2a3a; border-radius:10px; padding:14px 16px; outline:none;
-}
-.chat-form input:focus{border-color:#30506b; box-shadow:0 0 0 3px rgba(0,229,255,.18)}
-.btn-send{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:0 18px; border-radius:10px; font-weight:700;
-  border:1px solid #b13a45; color:#fff;
-  background:linear-gradient(180deg, #ff5967, #ff4655);
-  cursor:pointer;
-}
-.btn-send .ico{width:18px; height:18px; fill:#fff}
-.btn-send:disabled{opacity:.6; cursor:not-allowed}
-
-/* 푸터 */
-.v-footer{
-  padding:16px 22px; display:flex; justify-content:space-between; align-items:center;
-  border-top:1px solid var(--val-line); color:var(--val-muted);
-  background:linear-gradient(180deg, #0e1720, #0f1923);
-}
-
-/* 접근성 & 스크롤바 */
-.sr-only{position:absolute; width:1px; height:1px; margin:-1px; border:0; padding:0; clip:rect(0 0 0 0); overflow:hidden}
-.messages::-webkit-scrollbar{width:10px}
-.messages::-webkit-scrollbar-track{background:#0b121a}
-.messages::-webkit-scrollbar-thumb{background:#1f2a3a; border-radius:10px}
-.messages::-webkit-scrollbar-thumb:hover{background:#2a3850}
