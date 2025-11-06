@@ -40,10 +40,7 @@ body{
   background:linear-gradient(180deg, #0f1923, #0e1720);
 }
 .v-header .brand{display:flex; align-items:center; gap:12px}
-.v-logo{
-  width:36px; height:36px; fill:var(--val-red);
-  filter: drop-shadow(0 4px 10px rgba(255,70,85,.25));
-}
+.v-logo{ width:36px; height:36px; fill:var(--val-red); filter:drop-shadow(0 4px 10px rgba(255,70,85,.25)) }
 .title h1{font-size:22px; margin:0}
 .title span{display:block; color:var(--val-muted); font-size:12px; margin-top:2px; letter-spacing:.14em}
 .actions{display:flex; gap:10px}
@@ -66,7 +63,7 @@ body{
   border:1px solid var(--val-line);
   border-radius:16px;
   box-shadow:0 20px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
-  overflow:hidden;
+  overflow:hidden; /* 내부 스크롤만 보이게 */
 }
 .panel-head{
   padding:18px 18px 8px; border-bottom:1px solid var(--val-line);
@@ -80,25 +77,30 @@ body{
 .sub{margin:8px 2px 10px; color:var(--val-muted); font-size:14px}
 
 /* ===== 채팅 ===== */
-.chat-zone{display:grid; grid-template-rows:1fr auto}
+.chat-zone{
+  /* 핵심: 메시지 영역(1fr) + 입력창(auto)로 아래 고정 */
+  display:grid; grid-template-rows: 1fr auto;
+  /* 패널 안에서 충분한 높이를 확보 */
+  min-height: 420px;
+  max-height: clamp(500px, 70vh, 78vh);
+}
 
-/* 핵심 변경: 높이를 확보하고 기본 정렬을 '아래'로 */
+/* 메시지는 위에서부터 시작 + 내용 넘치면 자체 스크롤 */
 .messages{
   list-style:none; margin:0; padding:16px;
   display:flex; flex-direction:column; gap:12px;
-  height:62vh;                 /* 고정 높이로 영역 확보 */
-  justify-content:flex-end;    /* 내용 적을 때 아래 정렬 */
-  overflow:auto;               /* 내용 많아지면 스크롤 */
+  justify-content:flex-start;        /* ⬅ 위 정렬 */
+  align-content:flex-start;
+  overflow:auto;                     /* ⬅ 스크롤은 여기로 */
+  min-height:0;                      /* ⬅ 그리드 자식 스크롤 버그 방지 */
   background:
     linear-gradient(180deg, rgba(0,229,255,.05), transparent 30%),
     linear-gradient(0deg, rgba(255,255,255,.02), transparent 24%),
     linear-gradient(180deg, #0f1822, #101b27 60%, #0e1720);
 }
 
-.msg{
-  display:flex; align-items:flex-start; gap:12px;
-  max-width:86%; position:relative;
-}
+/* 공통 말풍선 베이스 */
+.msg{ display:flex; align-items:flex-start; gap:12px; max-width:86%; position:relative }
 .msg .bubble{
   padding:12px 14px; border-radius:12px; line-height:1.45;
   white-space:pre-wrap; word-break:break-word; border:1px solid #263246;
@@ -107,38 +109,31 @@ body{
 }
 
 /* 사용자 */
-.msg.user{align-self:flex-end; justify-content:flex-end}
+.msg.user{ align-self:flex-end; justify-content:flex-end }
 .msg.user .bubble{
   background:linear-gradient(180deg, #142235, #101b27);
   border-color:#2f3c52; box-shadow:0 8px 18px rgba(0,229,255,.12);
 }
 
 /* 봇(행돌): 아바타 + 이름(버블 밖) */
-.msg.bot{align-self:flex-start}
-.msg.bot .content{display:flex; flex-direction:column; gap:6px; min-width:0}
-.msg.bot .name{
-  font-size:12px; font-weight:700; letter-spacing:.08em;
-  color:#ff99a2; margin-left:2px;
-}
+.msg.bot{ align-self:flex-start }
+.msg.bot .content{ display:flex; flex-direction:column; gap:6px; min-width:0 }
+.msg.bot .name{ font-size:12px; font-weight:700; letter-spacing:.08em; color:#ff99a2; margin-left:2px }
 .msg.bot .bubble{
   background:linear-gradient(180deg, #161f2c, #121a25);
   border-color:#2a364a; box-shadow:0 8px 18px rgba(255,70,85,.12);
 }
 
-/* 아바타 */
-.msg.bot .avatar{
-  position:relative; flex:0 0 42px; display:flex; flex-direction:column; align-items:center;
-}
+/* 아바타 + 호버 카드 */
+.msg.bot .avatar{ position:relative; flex:0 0 42px; display:flex; flex-direction:column; align-items:center }
 .avatar-img{
   width:42px; height:42px; border-radius:50%;
   border:2px solid var(--val-red);
   box-shadow:0 0 10px rgba(255,70,85,.35);
-  object-fit:cover;
-  transition:transform .2s ease, box-shadow .2s ease;
+  object-fit:cover; transition:transform .2s ease, box-shadow .2s ease;
 }
 .msg.bot .avatar:hover .avatar-img{ transform:translateY(-1px); box-shadow:0 0 14px rgba(255,70,85,.45) }
 
-/* === 호버 소개 카드 === */
 .bio-card{
   position:absolute; top:-6px; left:54px; z-index:5;
   width:260px; padding:12px;
@@ -162,21 +157,14 @@ body{
 .bio-list li{margin:4px 0}
 .bio-tip{font-size:11px; color:#9aa3b2; border-top:1px solid #223044; padding-top:8px}
 
-/* 호버 시 보이기 (데스크톱) */
-.msg.bot .avatar:hover .bio-card{
-  opacity:1; transform:translateY(0) scale(1); pointer-events:auto;
-}
+/* 호버 보이기 & 모바일 토글 */
+.msg.bot .avatar:hover .bio-card{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto }
+.msg.bot .avatar.show-bio .bio-card{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto }
 
-/* 터치(모바일) 클릭 토글 */
-.msg.bot .avatar.show-bio .bio-card{
-  opacity:1; transform:translateY(0) scale(1); pointer-events:auto;
-}
-
-/* 생각 중 표시 */
-.msg.thinking .bubble{border-style:dashed; opacity:.9}
-
-/* 입력 폼 */
+/* === 입력 폼: 항상 패널 맨 아래 보이게 === */
 .chat-form{
+  position: sticky; bottom: 0;        /* ⬅ 하단에 고정 */
+  z-index: 1;
   display:grid; grid-template-columns:1fr auto; gap:12px;
   padding:12px; border-top:1px solid var(--val-line); background:var(--val-panel-2);
 }
@@ -209,7 +197,7 @@ body{
 .messages::-webkit-scrollbar-thumb{background:#1f2a3a; border-radius:10px}
 .messages::-webkit-scrollbar-thumb:hover{background:#2a3850}
 
-/* 반응형: 모바일에서 채팅 높이 조금 더 확보 */
+/* 반응형 */
 @media (max-width: 640px){
-  .messages{height:66vh}
+  .chat-zone{max-height: none; min-height: 70vh}
 }
