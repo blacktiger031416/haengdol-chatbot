@@ -1,13 +1,17 @@
-/* ===== Valorant 스타일 팔레트 ===== */
+/* ===== Valorant x Haengdol 테마 팔레트 ===== */
 :root{
-  --val-bg:#0F1923;
-  --val-panel:#111c28;
-  --val-panel-2:#0c141d;
+  /* 액센트 컬러는 원본 이미지의 마젠타/시안 계열에 맞춤 */
+  --val-bg:#0B1118;
+  --val-panel:#0f1722;
+  --val-panel-2:#0b141d;
   --val-text:#ECE8E1;
   --val-muted:#9aa3b2;
   --val-red:#FF4655;
   --val-teal:#00E5FF;
   --val-line:#243140;
+
+  /* 배경 이미지 */
+  --bg-image: url("https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/d7d9ce71efcb4ee2ef20e729ccff3a0df2780a6e-2112x1440.jpg");
 }
 
 *{box-sizing:border-box}
@@ -19,51 +23,72 @@ body{
   background:var(--val-bg);
   display:grid;
   grid-template-rows:auto 1fr auto;
+  overflow-x:hidden;
 }
 
-/* ===== 배경 ===== */
+/* ===== 배경 (이미지 + 글로우 + 비네트) ===== */
 .bg-grid{
-  position:fixed; inset:0; pointer-events:none; z-index:0;
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+
+  /* 1) 메인 이미지  2) 컬러 그라디언트  3) 그리드/노이즈  4) 비네트 */
   background:
-    radial-gradient(900px 600px at 80% -10%, rgba(0,229,255,.10), transparent 60%),
-    radial-gradient(900px 600px at 10% 110%, rgba(255,70,85,.12), transparent 60%),
-    linear-gradient(180deg, #0b131c, #0f1923 35%),
-    repeating-linear-gradient(0deg, transparent 0 22px, rgba(255,255,255,.02) 22px 23px);
+    radial-gradient(1200px 800px at 85% -10%, rgba(255,70,85,.15), transparent 60%),
+    radial-gradient(1200px 800px at 15% 110%, rgba(0,229,255,.16), transparent 60%),
+    var(--bg-image) center / cover no-repeat fixed,
+    linear-gradient(180deg, #091018, #0b121a 40%, #0c1016 100%);
+}
+.bg-grid::after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(200% 140% at 50% 0%, rgba(0,0,0,.35), transparent 40%) ,
+    radial-gradient(120% 100% at 50% 120%, rgba(0,0,0,.55), rgba(0,0,0,.75));
+  mix-blend-mode:multiply;
+}
+.bg-grid::before{
+  /* 아주 은은한 노이즈 */
+  content:"";
+  position:absolute; inset:0; opacity:.15;
+  background-image: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'>\
+    <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter>\
+    <rect width='100%' height='100%' filter='url(%23n)' opacity='0.15'/>\
+  </svg>");
 }
 
 /* ===== 헤더 ===== */
 .v-header{
-  position:relative; z-index:2; padding:16px 22px;
+  position:relative; z-index:2;
+  padding:16px 22px;
   display:flex; align-items:center; justify-content:space-between;
-  border-bottom:1px solid var(--val-line);
-  background:linear-gradient(180deg, #0f1923, #0e1720);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg, rgba(10,16,23,.65), rgba(9,14,20,.45));
+  backdrop-filter: blur(6px);
 }
 .v-header .brand{display:flex; align-items:center; gap:12px}
-.v-logo{ width:36px; height:36px; fill:var(--val-red); filter:drop-shadow(0 4px 10px rgba(255,70,85,.25)) }
+.v-logo{ width:36px; height:36px; fill:var(--val-red); filter: drop-shadow(0 4px 10px rgba(255,70,85,.25)) }
 .title h1{font-size:22px; margin:0}
-.title span{display:block; color:var(--val-muted); font-size:12px; margin-top:2px; letter-spacing:.14em}
-.actions{display:none} /* 기존 헤더 버튼 숨김 */
+.title span{display:block; color:#d2dde8; opacity:.75; font-size:12px; margin-top:2px; letter-spacing:.14em}
+.actions{display:none} /* 헤더의 기존 액션 숨김 — 우상단 도크 사용 */
 
 /* ===== 우상단 컨트롤 도크 ===== */
 .control-dock{
   position:fixed; top:16px; right:18px; z-index:50;
   display:flex; gap:10px; align-items:center;
-  background:linear-gradient(180deg, rgba(16,27,39,.7), rgba(13,20,30,.6));
-  border:1px solid rgba(36,49,64,.9);
+  background:linear-gradient(180deg, rgba(16,27,39,.58), rgba(13,20,30,.42));
+  border:1px solid rgba(255,255,255,.08);
   border-radius:14px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   padding:8px;
-  box-shadow:
-    0 10px 22px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.05);
+  box-shadow:0 10px 22px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
 }
 .dock-btn{
   display:inline-flex; align-items:center; gap:8px;
   font-weight:700; letter-spacing:.02em; line-height:1;
   padding:10px 12px; border-radius:10px; text-decoration:none;
   border:1px solid #2a364a; color:var(--val-text);
-  background:linear-gradient(180deg, #141e2b, #101825);
-  transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  background:linear-gradient(180deg, rgba(20,30,45,.9), rgba(13,22,35,.9));
+  transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
 }
 .dock-btn .ico{width:16px; height:16px; fill:currentColor}
 .dock-btn:hover{ transform:translateY(-1px); box-shadow:0 8px 18px rgba(0,0,0,.24); border-color:#37506e }
@@ -72,34 +97,37 @@ body{
   background:linear-gradient(180deg, #ff5967, #ff4655);
   color:#fff;
   box-shadow:0 8px 18px rgba(255,70,85,.28);
+  filter: drop-shadow(0 0 18px rgba(255,70,85,.18));
 }
 .dock-btn.primary:hover{ box-shadow:0 12px 26px rgba(255,70,85,.32) }
 .dock-btn.ghost{
   color:#d5e0ef; border-color:#2a3a52;
-  background:linear-gradient(180deg, #122033, #0d1726);
+  background:linear-gradient(180deg, rgba(18,32,51,.85), rgba(13,23,38,.85));
 }
 
-/* ===== 메인 패널 ===== */
+/* ===== 메인 패널 (글래스 카드) ===== */
 .panel{
   position:relative; z-index:1;
   width:min(980px, 94vw);
   margin:18px auto 28px;
-  background:linear-gradient(180deg, #101b27, #0f1822);
-  border:1px solid var(--val-line);
+  background:linear-gradient(180deg, rgba(16,27,39,.70), rgba(13,21,33,.64));
+  border:1px solid rgba(255,255,255,.08);
   border-radius:16px;
-  box-shadow:0 20px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+  box-shadow:0 20px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter: blur(10px) saturate(1.05);
   overflow:hidden;
 }
 .panel-head{
-  padding:18px 18px 8px; border-bottom:1px solid var(--val-line);
-  background:linear-gradient(180deg, rgba(255,70,85,.06), transparent);
+  padding:18px 18px 8px; border-bottom:1px solid rgba(255,255,255,.06);
+  background:
+    linear-gradient(180deg, rgba(255,70,85,.10), rgba(0,0,0,0));
 }
 .tag{
   display:inline-block; font-size:12px; color:#ffd7db;
-  background:rgba(255,70,85,.12); padding:6px 10px; border:1px solid rgba(255,70,85,.35);
+  background:rgba(255,70,85,.14); padding:6px 10px; border:1px solid rgba(255,70,85,.35);
   border-radius:8px 8px 2px 8px; letter-spacing:.12em;
 }
-.sub{margin:8px 2px 10px; color:var(--val-muted); font-size:14px}
+.sub{margin:8px 2px 10px; color:#cbd6e3; opacity:.8; font-size:14px}
 
 /* ===== 채팅 ===== */
 .chat-zone{ display:grid; grid-template-rows:1fr auto; min-height:420px; max-height:clamp(500px,70vh,78vh) }
@@ -107,27 +135,27 @@ body{
   list-style:none; margin:0; padding:16px;
   display:flex; flex-direction:column; gap:12px;
   justify-content:flex-start; overflow:auto; min-height:0;
+  /* 패널 내부는 살짝 더 어둡게 */
   background:
-    linear-gradient(180deg, rgba(0,229,255,.05), transparent 30%),
-    linear-gradient(0deg, rgba(255,255,255,.02), transparent 24%),
-    linear-gradient(180deg, #0f1822, #101b27 60%, #0e1720);
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.22));
 }
 .msg{ display:flex; align-items:flex-start; gap:12px; max-width:86%; position:relative }
 .msg .bubble{
   padding:12px 14px; border-radius:16px; line-height:1.5;
-  white-space:pre-wrap; word-break:break-word; border:1px solid #263246;
+  white-space:pre-wrap; word-break:break-word; border:1px solid rgba(38,50,70,.9);
   background:
-    radial-gradient(80% 60% at 20% 10%, rgba(255,70,85,.08), transparent 60%),
+    radial-gradient(80% 60% at 20% 10%, rgba(255,70,85,.10), transparent 60%),
     linear-gradient(180deg, #161f2c, #121a25);
-  box-shadow:0 10px 24px rgba(0,0,0,.28);
+  box-shadow:0 10px 24px rgba(0,0,0,.30);
 }
 
+/* 사용자 */
 .msg.user{ align-self:flex-end; justify-content:flex-end }
 .msg.user .bubble{
   background:
-    radial-gradient(80% 60% at 80% 0%, rgba(0,229,255,.10), transparent 60%),
-    linear-gradient(180deg, #142235, #101b27);
-  border-color:#2f3c52; box-shadow:0 10px 24px rgba(0,229,255,.16);
+    radial-gradient(80% 60% at 80% 0%, rgba(0,229,255,.12), transparent 60%),
+    linear-gradient(180deg, #142235, #0f1a28);
+  border-color:#2f3c52; box-shadow:0 10px 24px rgba(0,229,255,.18);
 }
 
 /* 봇 */
@@ -138,10 +166,10 @@ body{
 .slogan{
   font-size:11px; letter-spacing:.04em; color:#ffd7db;
   padding:3px 8px; border:1px solid rgba(255,70,85,.35);
-  border-radius:8px; background:rgba(255,70,85,.12)
+  border-radius:8px; background:rgba(255,70,85,.14)
 }
 .msg.bot .bubble{
-  border-color:#2a364a; box-shadow:0 10px 24px rgba(255,70,85,.16);
+  border-color:#2a364a; box-shadow:0 10px 24px rgba(255,70,85,.18);
 }
 
 /* 아바타 + 호버 카드 */
@@ -154,20 +182,20 @@ body{
 }
 .msg.bot .avatar:hover .avatar-img{ transform:translateY(-1px); box-shadow:0 0 14px rgba(255,70,85,.45) }
 
-/* 호버 카드 */
 .bio-card{
   position:absolute; top:-6px; left:54px; z-index:5;
   width:310px; max-width:70vw; padding:12px;
-  background:linear-gradient(180deg, #121a25, #0f1620);
-  border:1px solid #2a364a; border-radius:12px;
+  background:linear-gradient(180deg, rgba(18,26,37,.96), rgba(15,22,32,.94));
+  border:1px solid rgba(255,255,255,.08); border-radius:12px;
   color:var(--val-text);
-  box-shadow:0 18px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,70,85,.06);
+  box-shadow:0 18px 40px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,70,85,.08);
   opacity:0; transform:translateY(-4px) scale(.98);
   pointer-events:none; transition:opacity .18s ease, transform .18s ease;
 }
 .bio-card::before{
   content:""; position:absolute; left:-8px; top:14px;
-  border-width:8px; border-style:solid; border-color:transparent #2a364a transparent transparent;
+  border-width:8px; border-style:solid; border-color:transparent rgba(255,255,255,.10) transparent transparent;
+  filter:drop-shadow(0 0 0 rgba(0,0,0,0.3));
 }
 .bio-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
 .bio-head img{width:32px; height:32px; border-radius:50%; border:2px solid #ff4655}
@@ -191,10 +219,12 @@ body{
 .chat-form{
   position:sticky; bottom:0; z-index:1;
   display:grid; grid-template-columns:1fr auto; gap:12px;
-  padding:12px; border-top:1px solid var(--val-line); background:var(--val-panel-2);
+  padding:12px; border-top:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg, rgba(12,20,29,.86), rgba(10,18,27,.86));
+  backdrop-filter: blur(6px);
 }
 .chat-form input{
-  background:#0c141d; color:var(--val-text);
+  background:#0b141d; color:var(--val-text);
   border:1px solid #1f2a3a; border-radius:10px; padding:14px 16px; outline:none;
 }
 .chat-form input:focus{border-color:#30506b; box-shadow:0 0 0 3px rgba(0,229,255,.18)}
@@ -203,7 +233,7 @@ body{
   padding:0 18px; border-radius:10px; font-weight:700;
   border:1px solid #b13a45; color:#fff;
   background:linear-gradient(180deg, #ff5967, #ff4655);
-  cursor:pointer;
+  cursor:pointer; box-shadow:0 8px 18px rgba(255,70,85,.28);
 }
 .btn-send .ico{width:18px; height:18px; fill:#fff}
 .btn-send:disabled{opacity:.6; cursor:not-allowed}
@@ -211,11 +241,11 @@ body{
 /* 푸터 */
 .v-footer{
   padding:16px 22px; display:flex; justify-content:space-between; align-items:center;
-  border-top:1px solid var(--val-line); color:var(--val-muted);
-  background:linear-gradient(180deg, #0e1720, #0f1923);
+  border-top:1px solid rgba(255,255,255,.06); color:#d3dbe6; opacity:.85;
+  background:linear-gradient(180deg, rgba(9,15,22,.65), rgba(9,14,20,.45)); backdrop-filter: blur(6px);
 }
 
-/* 스크롤바 */
+/* 스크롤바 & 접근성 */
 .sr-only{position:absolute; width:1px; height:1px; margin:-1px; border:0; padding:0; clip:rect(0 0 0 0); overflow:hidden}
 .messages::-webkit-scrollbar{width:10px}
 .messages::-webkit-scrollbar-track{background:#0b121a}
