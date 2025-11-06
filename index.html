@@ -1,62 +1,73 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>행돌 · VALORANT AI Chatbot</title>
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>행돌 - VALORANT AI Chatbot</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="bg-grid"></div>
 
+  <!-- 헤더 -->
   <header class="v-header">
     <div class="brand">
-      <svg class="v-logo" viewBox="0 0 24 24"><path d="M3 16l5-8 4 6 3-5 6 10H3z"/></svg>
+      <svg class="v-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path d="M256 32L20 480h472L256 32z"/>
+      </svg>
       <div class="title">
-        <h1>행돌</h1>
-        <span>VALORANT AI CHATBOT</span>
+        <h1>/ AGENT: HAENGDOL</h1>
+        <span>랭크·메타·크로스헤어·맵콜... 뭐든 물어봐. — 행돌 모드</span>
       </div>
     </div>
   </header>
 
+  <!-- 상단 버튼 -->
   <div class="control-dock">
-    <button id="btn-new" class="dock-btn ghost" title="새 대화">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>새 대화</span>
-    </button>
-    <a class="dock-btn primary" href="https://app.netlify.com/" target="_blank" rel="noopener">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M4 12l4 4L20 4"/></svg><span>배포 · Netlify</span>
-    </a>
+    <a class="dock-btn" href="#">새 대화</a>
+    <a class="dock-btn primary" href="#">배포: Netlify</a>
   </div>
 
+  <!-- 메인 패널 -->
   <main class="panel">
     <div class="panel-head">
       <span class="tag">/ AGENT: HAENGDOL</span>
-      <div class="sub">랭크·메타·크로스헤어·맵콜… 뭐든 물어봐. — 행돌 모드</div>
+      <div class="sub">랭크·메타·크로스헤어·맵콜... 뭐든 물어봐. — 행돌 모드</div>
     </div>
 
-    <section class="chat-zone">
-      <!-- ✅ 반드시 존재해야 함 -->
-      <ul id="messages" class="messages" aria-live="polite"></ul>
+    <div class="chat-zone">
+      <ul class="messages" id="messages">
+        <li class="msg bot">
+          <img src="https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp" class="avatar-img" alt="행돌"/>
+          <div class="content">
+            <div class="name-row">
+              <span class="name">행돌</span>
+              <span class="slogan">현대인의 필수품 쇼티!</span>
+            </div>
+            <div class="bubble">안녕?</div>
+          </div>
+        </li>
+      </ul>
 
-      <form id="chat-form" class="chat-form" autocomplete="off">
-        <label class="sr-only" for="user-input">메시지 입력</label>
-        <input id="user-input" type="text" placeholder="예) 아이언에서 실버 가려면 뭐부터 고쳐?" />
+      <!-- 입력창 -->
+      <form id="chat-form" class="chat-form">
+        <label for="input" class="sr-only">메시지 입력</label>
+        <input id="input" type="text" placeholder="예) 아이언에서 실버 가려면 뭐부터 고쳐?" autocomplete="off" />
         <button id="send-btn" class="btn-send" type="submit">
-          <svg class="ico" viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-7-8-3z"/></svg>보내기
+          <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 11v2l13 8V3z"/>
+          </svg>
+          보내기
         </button>
       </form>
-    </section>
+    </div>
   </main>
 
   <footer class="v-footer">
-    <div>© 2025 Haengdol AI</div>
-    <div>DFM · gyen · 보라색(네뷸라)</div>
+    <span>© 2025 Haengdol AI Chatbot</span>
+    <span>Powered by OpenAI + Valorant Style</span>
   </footer>
 
-  <!-- 토스트 -->
-  <div id="toast" style="position:fixed;right:16px;bottom:16px;z-index:9999;display:none"></div>
-
-  <!-- ⚠️ defer + DOMContentLoaded로 안전 실행 -->
-  <script src="./app.js" defer></script>
+  <script src="app.js"></script>
 </body>
 </html>
