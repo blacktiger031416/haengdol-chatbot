@@ -1,21 +1,20 @@
-// Netlify Functions '/.netlify/functions/chat' 호출 + 프로필 호버 카드 + 컨트롤 도크
+// 프론트 메시징 + 프로필 카드(스킨 티어/제아벌 반영)
 
 const $messages = document.getElementById("messages");
 const $form = document.getElementById("chat-form");
 const $input = document.getElementById("user-input");
-const $send = document.getElementById("send-btn");
 const $btnNew = document.getElementById("btn-new");
 
 const SLOGANS = ["JUST PIEDRA","I'm GOD~","현대인의 필수품 쇼티!"];
 
-// 첫 메시지
+// 시작 인사
 addBot("안녕?");
 
-// 새 대화: 메시지 비우고 인사만 남김
-$btnNew.addEventListener("click", () => {
+$btnNew?.addEventListener("click", () => {
+  if (!$messages) return;
   $messages.innerHTML = "";
   addBot("안녕?");
-  $input.focus();
+  $input?.focus();
 });
 
 $form.addEventListener("submit", async (e) => {
@@ -35,9 +34,7 @@ $form.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text })
     });
-
-    if (!res.ok) throw new Error(`Server returned ${res.status}`);
-
+    if (!res.ok) throw new Error(`Server ${res.status}`);
     const data = await res.json();
     thinking.remove();
     addBot(data.reply ?? "응답 형식을 확인해주세요.");
@@ -47,7 +44,7 @@ $form.addEventListener("submit", async (e) => {
   }
 });
 
-function addUser(text) {
+function addUser(text){
   const li = document.createElement("li");
   li.className = "msg user";
   const bubble = document.createElement("div");
@@ -58,11 +55,10 @@ function addUser(text) {
   scrollBottom();
 }
 
-function addBot(text, opts = {}) {
+function addBot(text, opts = {}){
   const li = document.createElement("li");
   li.className = "msg bot" + (opts.thinking ? " thinking" : "");
 
-  // 왼쪽: 아바타+호버카드
   const avatar = document.createElement("div");
   avatar.className = "avatar";
   avatar.innerHTML = `
@@ -75,45 +71,55 @@ function addBot(text, opts = {}) {
           <span>치지직 파트너 · 발로란트 파트너 유튜버</span>
         </div>
       </div>
+
       <div class="bio-badges">
         <span class="badge red">JUST PIEDRA</span>
         <span class="badge red">I'm GOD~</span>
         <span class="badge teal">현대인의 필수품 쇼티!</span>
       </div>
+
       <div class="bio-two">
         <div class="bio-section">
           <h4>플레이 스타일</h4>
           <ul>
-            <li>천상계 <b>오멘 장인</b> → 요즘 <b>엔트리</b> 빈도↑</li>
+            <li>과거 <b>오멘 장인</b> & <b>셰리프 장인</b></li>
+            <li>요즘은 레디언트 자주 찍음 (행불딱 별명은 싫어함)</li>
             <li>정석 운영 + <b>원웨이/텔포 변수</b></li>
-            <li><b>샷건</b> 애호가(버키/저지/쇼티)</li>
           </ul>
         </div>
         <div class="bio-section">
-          <h4>무기 취향</h4>
+          <h4>셰리프 티어</h4>
           <ul>
-            <li><b>밴달</b> ≻ 팬텀, 셰리프·가디언 선호</li>
-            <li>오퍼 최근 숙련도 상승</li>
-            <li>프렌지·스팅어·마샬·아레스는 드묾</li>
+            <li><b>S티어</b>: 싱귤래리티</li>
+            <li><b>1티어</b>: 쿠로나미(단단한 느낌이지만 명중감 좋아서 채택),
+              메이지펑크, 둠브링어, 프로토콜, 아이온, 약탈자, 네오프런티어</li>
           </ul>
         </div>
       </div>
+
       <div class="bio-two">
         <div class="bio-section">
-          <h4>최애</h4>
-          <ul><li>팀: <b>DFM</b></li><li>선수: <b>gyen</b></li></ul>
+          <h4>최애/지인</h4>
+          <ul>
+            <li>팀: <b>DFM</b> · 최애: <b>gyen</b> · 친한 선수: <b>Akame</b></li>
+            <li>현재 팀: 김된모의 <b>WER</b></li>
+          </ul>
         </div>
         <div class="bio-section">
-          <h4>한 줄 요약</h4>
-          <p>침착한 운영 + 샷건 변수 + 높은 게임 이해도.</p>
+          <h4>밈 & 별명</h4>
+          <ul>
+            <li>한국 닉: <b>여자보면콧김나옴</b> (본인은 부정 ㅋㅋ)</li>
+            <li>아시아 닉: <b>너도이계정써봐</b></li>
+            <li>올드타운: 행돌·크포(할배)·선데이(순대)·츈츈(제아벌)·자몽뀨(친구)</li>
+          </ul>
         </div>
       </div>
-      <div class="bio-tip">Tip: 아바타를 클릭하면 카드 고정/해제</div>
+
+      <div class="bio-tip">Tip: 아바타 클릭으로 카드 고정/해제</div>
     </div>
   `;
   avatar.addEventListener("click", () => avatar.classList.toggle("show-bio"));
 
-  // 오른쪽: 이름/슬로건/버블
   const content = document.createElement("div");
   content.className = "content";
   const nameRow = document.createElement("div");
@@ -142,7 +148,5 @@ function addBot(text, opts = {}) {
   return li;
 }
 
-function scrollBottom() {
-  $messages.scrollTop = $messages.scrollHeight;
-}
-function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)] }
+function scrollBottom(){ $messages.scrollTop = $messages.scrollHeight; }
+function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
