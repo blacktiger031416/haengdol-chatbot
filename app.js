@@ -1,19 +1,18 @@
-// Netlify Functions '/.netlify/functions/chat' 호출 + 프로필 호버 카드(업데이트)
+// Netlify Functions '/.netlify/functions/chat' 호출 + 프로필 호버 카드(최종 완성)
 
 const $messages = document.getElementById("messages");
 const $form = document.getElementById("chat-form");
 const $input = document.getElementById("user-input");
 const $send = document.getElementById("send-btn");
 
-// 행돌 캐치프레이즈(말풍선 이름 아래에 랜덤 표시)
 const SLOGANS = [
   "JUST PIEDRA",
   "I'm GOD~",
   "현대인의 필수품 쇼티!"
 ];
 
-// ✅ 초기 안내 메시지 (데모 문구 제거)
-addBot("안녕! 발로 얘기하자—연결 완료 ✅ 뭐 도와줄까?");
+// ✅ 첫 메시지 = 단순 인사
+addBot("안녕?");
 
 $form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -35,17 +34,12 @@ $form.addEventListener("submit", async (e) => {
 
     if (!res.ok) throw new Error(`Server returned ${res.status}`);
 
-    const data = await res.json(); // { reply: "..." } 예상
+    const data = await res.json();
     thinking.remove();
     addBot(data.reply ?? "응답 형식을 확인해주세요.");
   } catch (err) {
     thinking.remove();
-    addBot(
-      [
-        "서버 응답이 잠시 불안정해. 다시 시도해볼래?",
-        "(임시 응답) — “ㅇㅋ 확인. 곧 바로 이어갈게.”"
-      ].join("\n")
-    );
+    addBot("서버가 잠깐 멈췄나봐. 다시 시도해봐!");
   }
 });
 
@@ -64,7 +58,6 @@ function addBot(text, opts = {}) {
   const li = document.createElement("li");
   li.className = "msg bot" + (opts.thinking ? " thinking" : "");
 
-  // 왼쪽: 아바타(호버 카드 포함)
   const avatar = document.createElement("div");
   avatar.className = "avatar";
   avatar.innerHTML = `
@@ -120,12 +113,11 @@ function addBot(text, opts = {}) {
       <div class="bio-tip">Tip: 아바타를 클릭하면 카드가 고정/해제돼요</div>
     </div>
   `;
-  // 모바일/터치용: 탭하면 카드 토글
+
   avatar.addEventListener("click", () => {
     avatar.classList.toggle("show-bio");
   });
 
-  // 오른쪽: 이름 + 캐치프레이즈 + 버블
   const content = document.createElement("div");
   content.className = "content";
 
@@ -159,6 +151,6 @@ function scrollBottom() {
   $messages.scrollTop = $messages.scrollHeight;
 }
 
-function pickRandom(arr){
-  return arr[Math.floor(Math.random()*arr.length)];
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
