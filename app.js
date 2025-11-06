@@ -1,5 +1,4 @@
-// 간단한 프런트엔드 채팅 로직 (백엔드 미연결 상태에서도 안전 동작)
-// 나중에 Netlify Functions로 '/.netlify/functions/chat' 엔드포인트를 만들 예정.
+// 간단한 프런트엔드 채팅 로직 (Netlify Functions '/.netlify/functions/chat' 호출)
 
 const $messages = document.getElementById("messages");
 const $form = document.getElementById("chat-form");
@@ -21,16 +20,13 @@ $form.addEventListener("submit", async (e) => {
   const thinking = addBot("생각 중…", { thinking: true });
 
   try {
-    // 백엔드 연결 전: 임시로 fetch 시도 → 실패하면 친절한 안내
     const res = await fetch("/.netlify/functions/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text })
     });
 
-    if (!res.ok) {
-      throw new Error(`Server returned ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
 
     const data = await res.json(); // { reply: "..." } 예상
     thinking.remove();
@@ -59,19 +55,33 @@ function addBot(text, opts = {}) {
   const li = document.createElement("li");
   li.className = "msg bot" + (opts.thinking ? " thinking" : "");
 
-  // 봇 메시지 컨테이너
-  const div = document.createElement("div");
-  div.innerHTML = `
-    <span class="profile-name">행돌</span>
-    <span>${text}</span>
+  // 왼쪽: 아바타, 오른쪽: 이름 + 버블 (이름은 버블 밖)
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.innerHTML = `
+    <img alt="행돌 프로필" src="https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp">
   `;
-  li.appendChild(div);
+
+  const content = document.createElement("div");
+  content.className = "content";
+  const name = document.createElement("div");
+  name.className = "name";
+  name.textContent = "행돌";
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = text;
+
+  content.appendChild(name);
+  content.appendChild(bubble);
+
+  li.appendChild(avatar);
+  li.appendChild(content);
 
   $messages.appendChild(li);
   scrollBottom();
   return li;
 }
-
 
 function scrollBottom() {
   $messages.scrollTop = $messages.scrollHeight;
