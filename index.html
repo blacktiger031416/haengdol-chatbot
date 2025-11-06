@@ -2,59 +2,65 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>행돌 AI Chatbot</title>
-  <!-- Valorant 느낌의 강한 산세리프 폰트 대체 -->
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>행돌 · VALORANT AI Chatbot</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <!-- 배경 패턴 -->
-  <div class="bg-grid" aria-hidden="true"></div>
+  <!-- 배경 -->
+  <div class="bg-grid"></div>
 
-  <!-- 상단 헤더(슬래시 컷 + 로고풍 SVG) -->
+  <!-- 헤더 -->
   <header class="v-header">
     <div class="brand">
-      <svg class="v-logo" viewBox="0 0 72 72" aria-hidden="true">
-        <path d="M10 50 L28 22 L36 34 L54 10 L62 22 L40 62 L28 46 L20 62 Z" />
+      <svg class="v-logo" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 16l5-8 4 6 3-5 6 10H3z"></path>
       </svg>
       <div class="title">
         <h1>행돌</h1>
         <span>VALORANT AI CHATBOT</span>
       </div>
     </div>
-    <nav class="actions">
-      <a class="btn-ghost" href="#" onclick="window.location.reload()">새 대화</a>
-      <a class="btn-solid" href="https://www.netlify.com" target="_blank" rel="noreferrer">배포: Netlify</a>
-    </nav>
-    <div class="slash" aria-hidden="true"></div>
+    <!-- 기존 actions는 비움: 버튼은 우상단 플로팅 도크로 이동 -->
+    <div class="actions" aria-hidden="true"></div>
   </header>
 
-  <!-- 메인 패널 -->
+  <!-- 우상단 컨트롤 도크 -->
+  <div class="control-dock" role="toolbar" aria-label="빠른 작업">
+    <button id="btn-new" class="dock-btn ghost" title="새 대화">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M12 5v14M5 12h14"/></svg>
+      <span>새 대화</span>
+    </button>
+    <a id="btn-deploy" class="dock-btn primary" href="https://app.netlify.com/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M4 12l4 4L20 4"/></svg>
+      <span>배포 · Netlify</span>
+    </a>
+  </div>
+
+  <!-- 메인 -->
   <main class="panel">
-    <section class="panel-head">
-      <div class="tag">/ AGENT: HAENGDOL</div>
-      <p class="sub">랭크·메타·크로스헤어·맵콜… 뭐든 물어봐. — <strong>행돌 모드</strong></p>
-    </section>
+    <div class="panel-head">
+      <span class="tag">/ AGENT: HAENGDOL</span>
+      <div class="sub">랭크·메타·크로스헤어·맵콜… 뭐든 물어봐. — 행돌 모드</div>
+    </div>
 
-    <section class="chat-zone" aria-label="채팅 영역">
-      <ul id="messages" class="messages" aria-live="polite" aria-relevant="additions"></ul>
+    <section class="chat-zone">
+      <ul id="messages" class="messages" aria-live="polite"></ul>
 
-      <form id="chat-form" class="chat-form" autocomplete="off">
-        <label for="user-input" class="sr-only">메시지 입력</label>
-        <input id="user-input" name="message" type="text" placeholder="예) 아이언에서 실버 가려면 뭐부터 고쳐?" required />
-        <button type="submit" id="send-btn" aria-label="보내기" class="btn-send">
-          <span>보내기</span>
-          <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><path d="M2 21L23 12L2 3L2 10L17 12L2 14L2 21Z"/></svg>
+      <form id="chat-form" class="chat-form">
+        <label class="sr-only" for="user-input">메시지 입력</label>
+        <input id="user-input" type="text" placeholder="예) 아이언에서 실버 가려면 뭐부터 고쳐?" autocomplete="off" />
+        <button id="send-btn" class="btn-send" type="submit" aria-label="보내기">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-7-8-3z"/></svg>
+          보내기
         </button>
       </form>
     </section>
   </main>
 
-  <!-- 푸터 -->
   <footer class="v-footer">
-    <div>© 2025 Haengdol AI • 팬메이드 데모</div>
-    <div class="credits">Powered by OpenAI • Built on GitHub → Netlify</div>
+    <div>© 2025 Haengdol AI · 팬 만든 프로젝트</div>
+    <div>최애 팀 <strong>DFM</strong> · 최애 선수 <strong>gyen</strong></div>
   </footer>
 
   <script src="./app.js"></script>
