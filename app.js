@@ -1,55 +1,124 @@
-// 프로필 카드에 “네뷸라 시리즈” 추가
+// 안전 실행: DOM 로드 이후
+window.addEventListener("DOMContentLoaded", () => {
+  const $messages = document.getElementById("messages");
+  const $form = document.getElementById("chat-form");
+  const $input = document.getElementById("user-input");
+  const $btnNew = document.getElementById("btn-new");
+  const $toast = document.getElementById("toast");
 
-// ... 상단 동일
+  if (!$messages || !$form || !$input) {
+    return toast("필수 DOM 요소가 없습니다. index.html의 id를 확인하세요.", true);
+  }
 
-function addBot(text, opts = {}){
-  const li = document.createElement("li");
-  li.className = "msg bot" + (opts.thinking ? " thinking" : "");
+  const SLOGANS = ["JUST PIEDRA","I'm GOD~","현대인의 필수품 쇼티!"];
 
-  const avatar = document.createElement("div");
-  avatar.className = "avatar";
-  avatar.innerHTML = `
-    <img alt="행돌 프로필" class="avatar-img" src="https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp">
-    <div class="bio-card">
-      <div class="bio-head">
-        <img alt="" src="https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp">
-        <div><strong>행돌</strong><span>치지직 · 발로란트 파트너</span></div>
-      </div>
+  // 초기 인사 (서버와 무관)
+  addBot("안녕?");
 
-      <div class="bio-badges">
-        <span class="badge red">JUST PIEDRA</span>
-        <span class="badge red">I'm GOD~</span>
-        <span class="badge teal">현대인의 필수품 쇼티!</span>
-      </div>
+  // 새 대화
+  $btnNew?.addEventListener("click", () => {
+    $messages.innerHTML = "";
+    addBot("안녕?");
+    $input.focus();
+  });
 
-      <div class="bio-two">
-        <div class="bio-section">
-          <h4>셰리프 스킨 취향</h4>
-          <ul>
-            <li><b>S티어</b>: 싱귤래리티</li>
-            <li><b>1티어</b>: 쿠로나미(단단한데 명중감 좋음), 메이지펑크, 둠브링어, 프로토콜, 아이온, 약탈자, 네오프런티어</li>
-          </ul>
-        </div>
-        <div class="bio-section">
-          <h4>💜 네뷸라 시리즈</h4>
-          <p>행돌의 퍼스널 컬러는 <b>보라색</b>.  
-          그래서 모두가 싫어하는 <b>네뷸라 셰리프·가디언·팬텀</b>을 진심으로 좋아함.  
-          “보라색은 내 색이야” 라는 말 자주 함 ㅋㅋ</p>
-        </div>
-      </div>
+  // 전송
+  $form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = $input.value.trim();
+    if (!text) return;
 
-      <div class="bio-section">
-        <h4>팀 & 친구</h4>
-        <ul>
-          <li>과거 올드타운 → 현재 WER 팀</li>
-          <li>크포(할배), 자몽뀨(절친), 츈츈(제아벌), 선데이(순대)</li>
-          <li>마뫄, 거갈없, 김된모, 하누, 버니버니, 에피나</li>
-        </ul>
-      </div>
+    addUser(text);
+    $input.value = "";
+    $input.focus();
 
-      <div class="bio-tip">보라색이 행돌의 상징 🎯</div>
-    </div>
-  `;
+    const thinking = addBot("생각 중…", { thinking: true });
 
-  // ... 나머지 동일 (생략)
-}
+    try {
+      const res = await fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      });
+
+      if (!res.ok) {
+        const detail = await res.text();
+        throw new Error(`Functions ${res.status}: ${detail}`);
+      }
+
+      const data = await res.json();
+      thinking.remove();
+      addBot(data.reply ?? "응답 형식을 확인해주세요.");
+    } catch (err) {
+      thinking.remove();
+      console.error(err);
+      toast("서버 통신 오류: " + (err.message || err), true);
+      addBot("서버가 잠깐 멈췄나봐. 다시 시도해봐!");
+    }
+  });
+
+  // ====== UI helpers ======
+  function addUser(text){
+    const li = document.createElement("li");
+    li.className = "msg user";
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = text;
+    li.appendChild(bubble);
+    $messages.appendChild(li);
+    scrollBottom();
+  }
+
+  function addBot(text, opts = {}){
+    const li = document.createElement("li");
+    li.className = "msg bot" + (opts.thinking ? " thinking" : "");
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.innerHTML = `
+      <img alt="행돌 프로필" class="avatar-img" src="https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp">
+    `;
+
+    const content = document.createElement("div");
+    content.className = "content";
+    const nameRow = document.createElement("div");
+    nameRow.className = "name-row";
+    const name = document.createElement("div");
+    name.className = "name";
+    name.textContent = "행돌";
+    const slogan = document.createElement("span");
+    slogan.className = "slogan";
+    slogan.textContent = pick(SLOGANS);
+    nameRow.appendChild(name);
+    nameRow.appendChild(slogan);
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = text;
+
+    content.appendChild(nameRow);
+    content.appendChild(bubble);
+
+    li.appendChild(avatar);
+    li.appendChild(content);
+    $messages.appendChild(li);
+    scrollBottom();
+    return li;
+  }
+
+  function scrollBottom(){ $messages.scrollTop = $messages.scrollHeight; }
+
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function toast(msg, danger=false){
+    $toast.style.display = "block";
+    $toast.style.padding = "12px 14px";
+    $toast.style.borderRadius = "10px";
+    $toast.style.color = "#fff";
+    $toast.style.background = danger ? "rgba(255,70,85,.95)" : "rgba(20,30,45,.95)";
+    $toast.style.boxShadow = "0 10px 24px rgba(0,0,0,.3)";
+    $toast.textContent = msg;
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(()=>{ $toast.style.display="none"; }, 3500);
+  }
+});
