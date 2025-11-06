@@ -179,3 +179,30 @@ body{
 .messages::-webkit-scrollbar-track{background:#0b121a}
 .messages::-webkit-scrollbar-thumb{background:#1f2a3a; border-radius:10px}
 .messages::-webkit-scrollbar-thumb:hover{background:#2a3850}
+
+/* === 행돌 프로필 아이콘 === */
+.msg.bot {
+  display: flex;
+  align-items: flex-start;
+}
+
+.msg.bot::before {
+  content: "";
+  display: inline-block;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background: url("https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp") center/cover no-repeat;
+  border: 2px solid #ff4655;
+  box-shadow: 0 0 10px rgba(255,70,85,.4);
+}
+
+.msg.bot .profile-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #ff99a2;
+  display: block;
+  margin-bottom: 3px;
+}
