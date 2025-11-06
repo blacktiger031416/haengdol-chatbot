@@ -1,18 +1,22 @@
-// Netlify Functions '/.netlify/functions/chat' 호출 + 프로필 호버 카드(최종 완성)
+// Netlify Functions '/.netlify/functions/chat' 호출 + 프로필 호버 카드 + 컨트롤 도크
 
 const $messages = document.getElementById("messages");
 const $form = document.getElementById("chat-form");
 const $input = document.getElementById("user-input");
 const $send = document.getElementById("send-btn");
+const $btnNew = document.getElementById("btn-new");
 
-const SLOGANS = [
-  "JUST PIEDRA",
-  "I'm GOD~",
-  "현대인의 필수품 쇼티!"
-];
+const SLOGANS = ["JUST PIEDRA","I'm GOD~","현대인의 필수품 쇼티!"];
 
-// ✅ 첫 메시지 = 단순 인사
+// 첫 메시지
 addBot("안녕?");
+
+// 새 대화: 메시지 비우고 인사만 남김
+$btnNew.addEventListener("click", () => {
+  $messages.innerHTML = "";
+  addBot("안녕?");
+  $input.focus();
+});
 
 $form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -58,6 +62,7 @@ function addBot(text, opts = {}) {
   const li = document.createElement("li");
   li.className = "msg bot" + (opts.thinking ? " thinking" : "");
 
+  // 왼쪽: 아바타+호버카드
   const avatar = document.createElement("div");
   avatar.className = "avatar";
   avatar.innerHTML = `
@@ -70,57 +75,47 @@ function addBot(text, opts = {}) {
           <span>치지직 파트너 · 발로란트 파트너 유튜버</span>
         </div>
       </div>
-
       <div class="bio-badges">
         <span class="badge red">JUST PIEDRA</span>
         <span class="badge red">I'm GOD~</span>
         <span class="badge teal">현대인의 필수품 쇼티!</span>
       </div>
-
       <div class="bio-two">
         <div class="bio-section">
           <h4>플레이 스타일</h4>
           <ul>
-            <li>천상계 <b>오멘 장인</b>으로 유명. 최근엔 <b>엔트리</b> 빈도↑</li>
-            <li>정석 운영 + <b>원웨이/텔포 변수</b> 적절히</li>
-            <li><b>샷건</b> 애호가(버키/저지/쇼티) — 상황 맞춰 변수 창출</li>
+            <li>천상계 <b>오멘 장인</b> → 요즘 <b>엔트리</b> 빈도↑</li>
+            <li>정석 운영 + <b>원웨이/텔포 변수</b></li>
+            <li><b>샷건</b> 애호가(버키/저지/쇼티)</li>
           </ul>
         </div>
         <div class="bio-section">
           <h4>무기 취향</h4>
           <ul>
             <li><b>밴달</b> ≻ 팬텀, 셰리프·가디언 선호</li>
-            <li>오퍼 실력 최근 상승</li>
+            <li>오퍼 최근 숙련도 상승</li>
             <li>프렌지·스팅어·마샬·아레스는 드묾</li>
           </ul>
         </div>
       </div>
-
       <div class="bio-two">
         <div class="bio-section">
           <h4>최애</h4>
-          <ul>
-            <li>팀: <b>DFM</b></li>
-            <li>선수: <b>gyen</b></li>
-          </ul>
+          <ul><li>팀: <b>DFM</b></li><li>선수: <b>gyen</b></li></ul>
         </div>
         <div class="bio-section">
           <h4>한 줄 요약</h4>
           <p>침착한 운영 + 샷건 변수 + 높은 게임 이해도.</p>
         </div>
       </div>
-
-      <div class="bio-tip">Tip: 아바타를 클릭하면 카드가 고정/해제돼요</div>
+      <div class="bio-tip">Tip: 아바타를 클릭하면 카드 고정/해제</div>
     </div>
   `;
+  avatar.addEventListener("click", () => avatar.classList.toggle("show-bio"));
 
-  avatar.addEventListener("click", () => {
-    avatar.classList.toggle("show-bio");
-  });
-
+  // 오른쪽: 이름/슬로건/버블
   const content = document.createElement("div");
   content.className = "content";
-
   const nameRow = document.createElement("div");
   nameRow.className = "name-row";
   const name = document.createElement("div");
@@ -150,7 +145,4 @@ function addBot(text, opts = {}) {
 function scrollBottom() {
   $messages.scrollTop = $messages.scrollHeight;
 }
-
-function pickRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)] }
