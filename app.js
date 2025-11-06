@@ -1,4 +1,4 @@
-// 간단한 프런트엔드 채팅 로직 (Netlify Functions '/.netlify/functions/chat' 호출)
+// Netlify Functions '/.netlify/functions/chat' 호출 + 프로필 호버 카드
 
 const $messages = document.getElementById("messages");
 const $form = document.getElementById("chat-form");
@@ -46,7 +46,10 @@ $form.addEventListener("submit", async (e) => {
 function addUser(text) {
   const li = document.createElement("li");
   li.className = "msg user";
-  li.textContent = text;
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = text;
+  li.appendChild(bubble);
   $messages.appendChild(li);
   scrollBottom();
 }
@@ -55,12 +58,32 @@ function addBot(text, opts = {}) {
   const li = document.createElement("li");
   li.className = "msg bot" + (opts.thinking ? " thinking" : "");
 
-  // 왼쪽: 아바타, 오른쪽: 이름 + 버블 (이름은 버블 밖)
+  // 왼쪽: 아바타(호버 카드 포함), 오른쪽: 이름 + 버블
   const avatar = document.createElement("div");
   avatar.className = "avatar";
   avatar.innerHTML = `
-    <img alt="행돌 프로필" src="https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp">
+    <img alt="행돌 프로필" class="avatar-img" src="https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp">
+    <div class="bio-card" role="dialog" aria-label="행돌 소개">
+      <div class="bio-head">
+        <img alt="" src="https://i.namu.wiki/i/WnNvjJZqUi-RZqxnEPnolaFIs8Ydu6g2dFKaD2JYJsCs4-rqc0u5jfVHh2kD1LzJw6VfmYyanpUwk7sLSmMpdQ.webp">
+        <div>
+          <strong>행돌</strong>
+          <span>VALORANT 스트리머 / 듀얼리스트 감성</span>
+        </div>
+      </div>
+      <ul class="bio-list">
+        <li>톤: 빠르고 재치있게, 과한 비속어 X</li>
+        <li>주제: 랭크, 메타, 크로스헤어, 맵콜</li>
+        <li>안전: 개인정보/유해 요청은 거절 & 대안 제시</li>
+      </ul>
+      <div class="bio-tip">Tip: 아바타를 다시 누르면 닫혀요</div>
+    </div>
   `;
+
+  // 모바일/터치용: 탭하면 카드 토글
+  avatar.addEventListener("click", () => {
+    avatar.classList.toggle("show-bio");
+  });
 
   const content = document.createElement("div");
   content.className = "content";
