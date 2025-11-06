@@ -1,0 +1,8 @@
+# netlify.toml
+[build]
+  # 정적 사이트라서 build command 없음
+  publish = "/"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild" # 최신 런타임에서 자동 번들
