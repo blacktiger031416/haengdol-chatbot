@@ -58,11 +58,20 @@ function addUser(text) {
 function addBot(text, opts = {}) {
   const li = document.createElement("li");
   li.className = "msg bot" + (opts.thinking ? " thinking" : "");
-  li.textContent = text;
+
+  // 봇 메시지 컨테이너
+  const div = document.createElement("div");
+  div.innerHTML = `
+    <span class="profile-name">행돌</span>
+    <span>${text}</span>
+  `;
+  li.appendChild(div);
+
   $messages.appendChild(li);
   scrollBottom();
   return li;
 }
+
 
 function scrollBottom() {
   $messages.scrollTop = $messages.scrollHeight;
