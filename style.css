@@ -33,8 +33,7 @@ body{
 
 /* ===== 헤더 ===== */
 .v-header{
-  position:relative; z-index:2;
-  padding:16px 22px;
+  position:relative; z-index:2; padding:16px 22px;
   display:flex; align-items:center; justify-content:space-between;
   border-bottom:1px solid var(--val-line);
   background:linear-gradient(180deg, #0f1923, #0e1720);
@@ -63,7 +62,7 @@ body{
   border:1px solid var(--val-line);
   border-radius:16px;
   box-shadow:0 20px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
-  overflow:hidden; /* 내부 스크롤만 보이게 */
+  overflow:hidden;
 }
 .panel-head{
   padding:18px 18px 8px; border-bottom:1px solid var(--val-line);
@@ -78,21 +77,15 @@ body{
 
 /* ===== 채팅 ===== */
 .chat-zone{
-  /* 핵심: 메시지 영역(1fr) + 입력창(auto)로 아래 고정 */
   display:grid; grid-template-rows: 1fr auto;
-  /* 패널 안에서 충분한 높이를 확보 */
   min-height: 420px;
   max-height: clamp(500px, 70vh, 78vh);
 }
-
-/* 메시지는 위에서부터 시작 + 내용 넘치면 자체 스크롤 */
 .messages{
   list-style:none; margin:0; padding:16px;
   display:flex; flex-direction:column; gap:12px;
-  justify-content:flex-start;        /* ⬅ 위 정렬 */
-  align-content:flex-start;
-  overflow:auto;                     /* ⬅ 스크롤은 여기로 */
-  min-height:0;                      /* ⬅ 그리드 자식 스크롤 버그 방지 */
+  justify-content:flex-start; align-content:flex-start;
+  overflow:auto; min-height:0;
   background:
     linear-gradient(180deg, rgba(0,229,255,.05), transparent 30%),
     linear-gradient(0deg, rgba(255,255,255,.02), transparent 24%),
@@ -102,7 +95,7 @@ body{
 /* 공통 말풍선 베이스 */
 .msg{ display:flex; align-items:flex-start; gap:12px; max-width:86%; position:relative }
 .msg .bubble{
-  padding:12px 14px; border-radius:12px; line-height:1.45;
+  padding:12px 14px; border-radius:16px; line-height:1.5;
   white-space:pre-wrap; word-break:break-word; border:1px solid #263246;
   background:linear-gradient(180deg, #161f2c, #121a25);
   box-shadow:0 8px 18px rgba(0,0,0,.25);
@@ -115,12 +108,17 @@ body{
   border-color:#2f3c52; box-shadow:0 8px 18px rgba(0,229,255,.12);
 }
 
-/* 봇(행돌): 아바타 + 이름(버블 밖) */
+/* 봇 */
 .msg.bot{ align-self:flex-start }
 .msg.bot .content{ display:flex; flex-direction:column; gap:6px; min-width:0 }
-.msg.bot .name{ font-size:12px; font-weight:700; letter-spacing:.08em; color:#ff99a2; margin-left:2px }
+.name-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap }
+.msg.bot .name{ font-size:12px; font-weight:800; letter-spacing:.08em; color:#ff99a2 }
+.slogan{
+  font-size:11px; letter-spacing:.04em; color:#ffd7db;
+  padding:3px 8px; border:1px solid rgba(255,70,85,.35);
+  border-radius:8px; background:rgba(255,70,85,.12)
+}
 .msg.bot .bubble{
-  background:linear-gradient(180deg, #161f2c, #121a25);
   border-color:#2a364a; box-shadow:0 8px 18px rgba(255,70,85,.12);
 }
 
@@ -134,9 +132,10 @@ body{
 }
 .msg.bot .avatar:hover .avatar-img{ transform:translateY(-1px); box-shadow:0 0 14px rgba(255,70,85,.45) }
 
+/* === 호버 소개 카드(업데이트) === */
 .bio-card{
   position:absolute; top:-6px; left:54px; z-index:5;
-  width:260px; padding:12px;
+  width:310px; max-width:70vw; padding:12px;
   background:linear-gradient(180deg, #121a25, #0f1620);
   border:1px solid #2a364a; border-radius:12px;
   color:var(--val-text);
@@ -153,18 +152,29 @@ body{
 .bio-head img{width:32px; height:32px; border-radius:50%; border:2px solid #ff4655}
 .bio-head strong{display:block; font-size:14px}
 .bio-head span{display:block; font-size:12px; color:var(--val-muted)}
-.bio-list{margin:8px 0; padding-left:18px; font-size:12px; color:#c8d0dc}
-.bio-list li{margin:4px 0}
+.bio-badges{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0}
+.badge{
+  font-size:11px; padding:4px 8px; border-radius:999px;
+  border:1px solid #314154; background:#0f1822;
+}
+.badge.red{ border-color:#b13a45; background:rgba(255,70,85,.12); color:#ffd7db }
+.badge.teal{ border-color:#2e7f8e; background:rgba(0,229,255,.10); color:#d3f6ff }
+
+.bio-two{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.bio-section{margin:8px 0}
+.bio-section h4{margin:0 0 6px; font-size:12px; color:#cfd7e3; letter-spacing:.06em}
+.bio-section p{margin:0; font-size:12px; color:#c8d0dc}
+.bio-section ul{margin:0; padding-left:18px; font-size:12px; color:#c8d0dc}
+.bio-section li{margin:4px 0}
 .bio-tip{font-size:11px; color:#9aa3b2; border-top:1px solid #223044; padding-top:8px}
 
 /* 호버 보이기 & 모바일 토글 */
 .msg.bot .avatar:hover .bio-card{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto }
 .msg.bot .avatar.show-bio .bio-card{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto }
 
-/* === 입력 폼: 항상 패널 맨 아래 보이게 === */
+/* === 입력 폼: 패널 하단 고정 === */
 .chat-form{
-  position: sticky; bottom: 0;        /* ⬅ 하단에 고정 */
-  z-index: 1;
+  position: sticky; bottom: 0; z-index: 1;
   display:grid; grid-template-columns:1fr auto; gap:12px;
   padding:12px; border-top:1px solid var(--val-line); background:var(--val-panel-2);
 }
@@ -199,5 +209,7 @@ body{
 
 /* 반응형 */
 @media (max-width: 640px){
-  .chat-zone{max-height: none; min-height: 70vh}
+  .bio-two{grid-template-columns:1fr}
+  .panel{margin:10px auto 18px}
+  .chat-zone{max-height:none; min-height:70vh}
 }
